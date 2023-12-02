@@ -4,12 +4,13 @@ import path from "path";
 const __dirname = path.resolve();
 import dotenv from "dotenv";
 dotenv.config();
+import helmet from "helmet";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes.js";
 import flightRoutes from "./routes/flightRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
-import { errorHandler } from "./middlewares/errorMiddlewares.js";
+import { notFound, errorHandler } from "./middlewares/errorMiddlewares.js";
 
 // Assigning PORT
 const port = process.env.PORT || 7000;
@@ -26,6 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/", express.static("public"));
 /* 3rd-party-Middlewares */
+app.use(helmet());
 app.use(cors());
 app.use(cookieParser());
 
@@ -54,6 +56,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 /* Error-Handlers || Custom Middlewares */
+app.use(notFound);
 app.use(errorHandler);
 
 /* Server Listening */
