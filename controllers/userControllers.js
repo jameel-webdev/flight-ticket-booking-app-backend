@@ -97,10 +97,10 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
+      message: "User Profile Updated",
     });
   } else {
     res.status(404);
     throw new Error("User not found");
   }
-  res.status(200).json({ message: "Update-User-Profile" });
 });

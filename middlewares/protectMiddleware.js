@@ -21,3 +21,28 @@ export const protect = asyncHandler(async (req, res, next) => {
     throw new Error(`Not Authorized, No Token`);
   }
 });
+
+export const adminProtect = asyncHandler(async (req, res, next) => {
+  let token;
+
+  token = req.cookies.jwt;
+
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = await User.findById(decoded.userId).select("-password");
+      if (req.user.isAdmin) {
+        next();
+      } else {
+        res.status(401);
+        throw new Error(`Not Authorized`);
+      }
+    } catch (err) {
+      res.status(401);
+      throw new Error(`Not Authorized , Admin Access Only`);
+    }
+  } else {
+    res.status(401);
+    throw new Error(`Not Authorized, No Token`);
+  }
+});

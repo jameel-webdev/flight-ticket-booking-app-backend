@@ -8,6 +8,7 @@ const flightSchema = new mongoose.Schema({
   flightCode: {
     type: String,
     required: true,
+    unique: true,
   },
   origin: {
     type: String,
