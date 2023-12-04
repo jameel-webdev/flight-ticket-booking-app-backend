@@ -26,11 +26,12 @@ export const registerUser = asyncHandler(async (req, res) => {
     password: hashedPassword,
   });
   if (newUser) {
-    await generateToken(res, newUser._id);
+    generateToken(res, newUser._id);
     res.status(201).json({
       _id: newUser._id,
+      name: newUser.name,
       email: newUser.email,
-      password: newUser.password,
+      isAdmin: newUser.isAdmin,
       message: `Registration Successfull`,
     });
   } else {
@@ -47,18 +48,20 @@ export const loginUser = asyncHandler(async (req, res) => {
 
   // User Data Check
   const validUser = await User.findOne({ email });
+  if (!validUser) throw new Error(`Invalid User Details`);
   const validPassword = await compareHashPassword(password, validUser.password);
   if (validUser && validPassword) {
-    await generateToken(res, validUser._id);
+    generateToken(res, validUser._id);
     res.status(200).json({
       _id: validUser._id,
       name: validUser.name,
       email: validUser.email,
+      isAdmin: validUser.isAdmin,
       message: `Login Successfull`,
     });
   } else {
     res.status(400);
-    throw new Error(`Invalid User Data`);
+    throw new Error(`Invalid User Details`);
   }
 });
 
