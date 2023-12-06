@@ -72,7 +72,7 @@ export const getAllFlights = asyncHandler(async (req, res) => {
   const allFlights = await Flight.find({});
   if (allFlights) {
     res.status(200).json({
-      allFlights,
+      data: allFlights,
       message: `All Flights Data Fetched`,
     });
   } else {

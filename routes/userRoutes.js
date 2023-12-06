@@ -5,6 +5,7 @@ import {
   logoutUser,
   getUserProfile,
   updateUserProfile,
+  getAllUsers,
 } from "../controllers/userControllers.js";
 import { protect } from "../middlewares/protectMiddleware.js";
 const router = express.Router();
@@ -23,5 +24,7 @@ router
   .route("/profile")
   .get(protect, getUserProfile)
   .put(protect, updateUserProfile);
+
+router.route("/allusers").get(getAllUsers);
 
 export default router;

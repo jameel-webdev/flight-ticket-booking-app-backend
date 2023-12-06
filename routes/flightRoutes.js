@@ -12,7 +12,7 @@ const router = express.Router();
 // Create Flight Data
 router.route("/addflight").post(adminProtect, addFlight);
 // Get All Flights Data
-router.route("/").get(protect, getAllFlights);
+router.route("/allflights").get(protect, getAllFlights);
 // Update Flight
 router
   .route("/:flightId")

@@ -80,6 +80,7 @@ export const getUserProfile = asyncHandler(async (req, res) => {
     _id: req.user._id,
     name: req.user.name,
     email: req.user.email,
+    isAdmin: req.user.isAdmin,
   };
   res.status(200).json({ user });
 });
@@ -100,10 +101,25 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
+      isAdmin: user.isAdmin,
       message: "User Profile Updated",
     });
   } else {
     res.status(404);
     throw new Error("User not found");
+  }
+});
+
+// Get All Users Data
+export const getAllUsers = asyncHandler(async (req, res) => {
+  const allusers = await User.find({});
+  if (allusers) {
+    res.status(200).json({
+      data: allusers,
+      message: `All user details fetched`,
+    });
+  } else {
+    res.status(400);
+    throw new Error(`Problem while fetching user datas`);
   }
 });
