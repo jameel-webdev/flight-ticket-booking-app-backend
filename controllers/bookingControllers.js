@@ -6,11 +6,14 @@ import asyncHandler from "express-async-handler";
 // New Booking
 export const newBooking = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const flightId = req.query.flightid;
-  const seatsBooked = req.body;
-  console.log(seatsBooked);
+  const { flightId, seatsBooked } = req.body;
   // Input check
-  if (!userId || !flightId || !seatsBooked)
+  if (
+    !userId ||
+    !flightId ||
+    !Array.isArray(seatsBooked) ||
+    seatsBooked.length === 0
+  )
     throw new Error(`Request to Provide Needed Data`);
 
   // Check if user and flight exist
@@ -18,26 +21,17 @@ export const newBooking = asyncHandler(async (req, res) => {
   const flight = await Flight.findById(flightId);
   if (!user || !flight) throw new Error(`User or flight not found`);
 
-  // Check seats availablity
-  const unavailableSeats = seatsBooked.filter((seat) =>
-    flight.seatsBooked.map((entry) => entry.seat).includes(seat)
-  );
-  if (unavailableSeats.length > 0) {
-    return res.status(400).json({ error: "Seats are already booked" });
-  }
-
   // Create a new booking
   const newBooking = new Booking({
     user: userId,
     flight: flightId,
-    seatsB,
+    seatsBooked: seatsBooked,
   });
 
   const savedBooking = await newBooking.save();
 
   // Update the flight's seatsBooked array
-  flight.seatsBooked = flight.seatsBooked.push({
-    ...seatsBooked,
+  flight.seatsBooked.push({
     seatNumber: seatsBooked,
   });
   await flight.save();
