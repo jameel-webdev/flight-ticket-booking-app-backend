@@ -1,9 +1,9 @@
 import express from "express";
 import {
-  allBookings,
-  getBooking,
+  getAllBookings,
   newBooking,
-  updateBooking,
+  getBookingById,
+  cancelBookingById,
 } from "../controllers/bookingControllers.js";
 import { adminProtect, protect } from "../middlewares/protectMiddleware.js";
 
@@ -13,12 +13,12 @@ const router = express.Router();
 router.route("/newbooking").post(protect, newBooking);
 
 // All Bookings
-router.route("/").get(adminProtect, allBookings);
+router.route("/getallbookings").get(adminProtect, getAllBookings);
 
-// Update Booking
-router
-  .route("/:bookingId")
-  .get(protect, getBooking)
-  .put(protect, updateBooking);
+// Get Booking ById
+router.route("/:bookingId").get(protect, getBookingById);
+
+// Cancel Booking ById
+router.route("/:bookingId").delete(protect, cancelBookingById);
 
 export default router;

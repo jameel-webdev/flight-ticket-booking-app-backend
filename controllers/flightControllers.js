@@ -1,6 +1,4 @@
-import User from "../models/userModel.js";
 import Flight from "../models/flightModel.js";
-import Booking from "../models/bookingModel.js";
 import asyncHandler from "express-async-handler";
 
 // AddFlight
@@ -29,7 +27,8 @@ export const addFlight = asyncHandler(async (req, res) => {
     !arrivalTime ||
     !capacity ||
     !flightType ||
-    !price
+    !price ||
+    !status
   )
     throw new Error(`Please Provide All Flight Details`);
 
@@ -38,19 +37,7 @@ export const addFlight = asyncHandler(async (req, res) => {
   if (existingFlight) throw new Error(`Flight-Code Already Exists`);
 
   // Adding Flight
-  const newFlight = await Flight.create({
-    flightName,
-    flightCode,
-    origin,
-    destination,
-    journeyDate,
-    departureTime,
-    arrivalTime,
-    capacity,
-    flightType,
-    price,
-    status,
-  });
+  const newFlight = await Flight.create({ ...req.body });
   if (newFlight) {
     res.status(201).json({
       _id: newFlight._id,
@@ -69,8 +56,11 @@ export const addFlight = asyncHandler(async (req, res) => {
 
 // All Flights
 export const getAllFlights = asyncHandler(async (req, res) => {
-  const allFlights = await Flight.find({});
-  if (allFlights) {
+  const filteredKeyword = Object.fromEntries(
+    Object.entries({ ...req.query }).filter(([_, value]) => value !== "")
+  );
+  const allFlights = await Flight.find(filteredKeyword);
+  if (allFlights.length > 0) {
     res.status(200).json({
       data: allFlights,
       message: `All Flights Data Fetched`,
@@ -82,10 +72,9 @@ export const getAllFlights = asyncHandler(async (req, res) => {
 });
 
 // Get Flight By ID
-export const getFlight = asyncHandler(async (req, res) => {
-  const { flightId } = req.params;
+export const getFlightById = asyncHandler(async (req, res) => {
   // check flightId
-  const flight = await Flight.findById(flightId);
+  const flight = await Flight.findById(req.params.flightId);
   if (flight) {
     res.status(200).json({
       flight,
@@ -98,18 +87,15 @@ export const getFlight = asyncHandler(async (req, res) => {
 });
 
 // Update Flight Data
-export const updateFlight = asyncHandler(async (req, res) => {
-  const { flightId } = req.params;
-  const { ...newData } = req.body;
+export const updateFlightById = asyncHandler(async (req, res) => {
   // check flightId
-  const flight = await Flight.findById(flightId);
+  const flight = await Flight.findById(req.params.flightId);
   if (flight) {
     const newflightData = await Flight.findByIdAndUpdate(
-      flightId,
-      { $set: newData },
+      req.params.flightId,
+      { ...req.body },
       { new: true }
     );
-    console.log(newflightData);
     res.status(200).json({
       newflightData,
       message: `Flight Details Updated`,

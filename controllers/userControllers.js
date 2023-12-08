@@ -1,6 +1,4 @@
 import User from "../models/userModel.js";
-import Flight from "../models/flightModel.js";
-import Booking from "../models/bookingModel.js";
 import asyncHandler from "express-async-handler";
 import {
   compareHashPassword,
@@ -32,6 +30,7 @@ export const registerUser = asyncHandler(async (req, res) => {
       name: newUser.name,
       email: newUser.email,
       isAdmin: newUser.isAdmin,
+      mybookings: newUser.mybookings,
       message: `Registration Successfull`,
     });
   } else {
@@ -57,6 +56,7 @@ export const loginUser = asyncHandler(async (req, res) => {
       name: validUser.name,
       email: validUser.email,
       isAdmin: validUser.isAdmin,
+      mybookings: validUser.mybookings,
       message: `Login Successfull`,
     });
   } else {
@@ -81,6 +81,7 @@ export const getUserProfile = asyncHandler(async (req, res) => {
     name: req.user.name,
     email: req.user.email,
     isAdmin: req.user.isAdmin,
+    mybookings: req.user.mybookings,
   };
   res.status(200).json({ user });
 });
@@ -102,6 +103,7 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
       name: updatedUser.name,
       email: updatedUser.email,
       isAdmin: user.isAdmin,
+      mybookings: user.mybookings,
       message: "User Profile Updated",
     });
   } else {

@@ -20,7 +20,11 @@ export const newBooking = asyncHandler(async (req, res) => {
   const user = await User.findById(userId);
   const flight = await Flight.findById(flightId);
   if (!user || !flight) throw new Error(`User or flight not found`);
-
+  const flightData = {
+    flightName: flight.flightName,
+    flightCode: flight.flightCode,
+    journeyDate: flight.journeyDate,
+  };
   // Create a new booking
   const newBooking = new Booking({
     user: userId,
@@ -29,14 +33,24 @@ export const newBooking = asyncHandler(async (req, res) => {
   });
 
   const savedBooking = await newBooking.save();
-
   // Update the flight's seatsBooked array
-  flight.seatsBooked.push({
-    seatNumber: seatsBooked,
-  });
+  flight.seatsBooked = [...flight.seatsBooked, ...req.body.seatsBooked];
   await flight.save();
+  // Update the user's mybookings array
+  user.mybookings = [
+    ...user.mybookings,
+    { ...flightData, ...savedBooking._doc },
+  ];
+  await user.save();
   if (savedBooking) {
     res.status(201).json({
+      userData: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        mybookings: user.mybookings,
+      },
       savedBooking,
       message: `Ticket Booked`,
     });
@@ -47,10 +61,32 @@ export const newBooking = asyncHandler(async (req, res) => {
 });
 
 // Get All Bookings
-export const allBookings = asyncHandler(async (req, res) => {});
+export const getAllBookings = asyncHandler(async (req, res) => {
+  const allBookings = await Booking.find();
+  if (allBookings) {
+    res.status(200).json({
+      data: allBookings,
+      message: `All Bookings Data Fetched`,
+    });
+  } else {
+    res.status(400);
+    throw new Error(`Failed to Get Flights Data`);
+  }
+});
 
-// Get Flight By ID
-export const getBooking = asyncHandler(async (req, res) => {});
+// Get Booking ById
+export const getBookingById = asyncHandler(async (req, res) => {
+  const booking = await Booking.findById(req.params.userId);
+  if (booking) {
+    res.status(200).json({
+      booking,
+      message: `Booking Data Retrived`,
+    });
+  } else {
+    res.status(400);
+    throw new Error(`Invalid Booking Details`);
+  }
+});
 
-// Update Bookings
-export const updateBooking = asyncHandler(async (req, res) => {});
+// Cancel Bookings
+export const cancelBookingById = asyncHandler(async (req, res) => {});

@@ -48,7 +48,7 @@ const flightSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    default: "Scheduled",
+    required: true,
   },
 });
 
