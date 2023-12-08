@@ -43,6 +43,6 @@ export const adminProtect = asyncHandler(async (req, res, next) => {
     }
   } else {
     res.status(401);
-    throw new Error(`Not Authorized, No Token`);
+    throw new Error(`Not Authorized, Only Admin`);
   }
 });
