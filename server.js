@@ -10,7 +10,8 @@ import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes.js";
 import flightRoutes from "./routes/flightRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
-import { notFound, errorHandler } from "./middlewares/errorMiddlewares.js";
+import razorpayRoutes from "./routes/razorpayRoutes.js";
+import { errorHandler } from "./middlewares/errorMiddlewares.js";
 
 // Assigning PORT
 const port = process.env.PORT || 7000;
@@ -35,6 +36,7 @@ app.use(cookieParser());
 app.use("/api/users", userRoutes);
 app.use("/api/flights", flightRoutes);
 app.use("/api/bookings", bookingRoutes);
+app.use("/api/razorpay", razorpayRoutes);
 
 /* API_Html_Pages */
 if (process.env.NODE_ENV === "production") {
@@ -56,7 +58,6 @@ if (process.env.NODE_ENV === "production") {
 }
 
 /* Error-Handlers || Custom Middlewares */
-app.use(notFound);
 app.use(errorHandler);
 
 /* Server Listening */

@@ -51,12 +51,15 @@ export const loginUser = asyncHandler(async (req, res) => {
   const validPassword = await compareHashPassword(password, validUser.password);
   if (validUser && validPassword) {
     generateToken(res, validUser._id);
-    res.status(200).json({
+    const data = {
       _id: validUser._id,
       name: validUser.name,
       email: validUser.email,
       isAdmin: validUser.isAdmin,
       mybookings: validUser.mybookings,
+    };
+    res.status(200).json({
+      data,
       message: `Login Successfull`,
     });
   } else {
@@ -76,14 +79,14 @@ export const logoutUser = asyncHandler(async (req, res) => {
 
 // Get User Data
 export const getUserProfile = asyncHandler(async (req, res) => {
-  const user = {
+  const data = {
     _id: req.user._id,
     name: req.user.name,
     email: req.user.email,
     isAdmin: req.user.isAdmin,
     mybookings: req.user.mybookings,
   };
-  res.status(200).json({ user });
+  res.status(200).json({ data });
 });
 
 // Update User Data

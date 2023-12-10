@@ -19,11 +19,12 @@ router.route("/signin").post(loginUser);
 // Logout /api/users/logout
 router.route("/logout").post(logoutUser);
 
+//Get profile
+router.route("/profile").get(protect, getUserProfile);
+
 // Update User Data
-router
-  .route("/profile")
-  .get(protect, getUserProfile)
-  .put(protect, updateUserProfile);
+router.route("/profile").put(protect, updateUserProfile);
+
 // Get All Users
 router.route("/allusers").get(getAllUsers);
 

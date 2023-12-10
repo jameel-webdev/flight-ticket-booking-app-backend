@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const bookingSchema = new mongoose.Schema({
+  transcationId: {
+    type: String,
+    require: true,
+  },
   flight: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "flights",
