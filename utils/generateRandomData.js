@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { format } from "date-fns";
 import Flight from "../models/flightModel.js";
 
 const locations = [
@@ -41,7 +42,7 @@ const getRandomFlightClass = () => {
   return flightType[index];
 };
 
-async function generateFlightData(count = 60) {
+async function generateFlightData(count = 100) {
   try {
     await Flight.collection.drop();
     for (let i = 0; i < count; i++) {
@@ -54,14 +55,12 @@ async function generateFlightData(count = 60) {
         }-${faker.airline.flightNumber({ addLeadingZeros: true })}`,
         origin,
         destination,
-        journeyDate: faker.date
-          .soon({
-            days: 7,
-          })
-          .toLocaleDateString()
-          .split("/")
-          .reverse()
-          .join("-"),
+        journeyDate: format(
+          faker.date.soon({
+            days: 2,
+          }),
+          "yyyy-MM-dd"
+        ),
         departureTime: faker.date.anytime().toTimeString().slice(0, 5),
         arrivalTime: faker.date.anytime().toTimeString().slice(0, 5),
         capacity: faker.number.int({ min: 25, max: 69 }),
