@@ -41,6 +41,7 @@ app.use("/api/razorpay", razorpayRoutes);
 
 /* API_Html_Pages */
 if (process.env.NODE_ENV === "production") {
+  generateFlightData();
   app.get("/", (req, res) => {
     res.status(200);
     res.sendFile(path.join(__dirname, "public", "html", "index.html"));
