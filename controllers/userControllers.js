@@ -101,12 +101,15 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
       user.password = await generateHashedPassword(req.body.password);
     }
     const updatedUser = await user.save();
-    res.status(200).json({
+    const data = {
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
       isAdmin: user.isAdmin,
       mybookings: user.mybookings,
+    };
+    res.status(200).json({
+      data,
       message: "User Profile Updated",
     });
   } else {
