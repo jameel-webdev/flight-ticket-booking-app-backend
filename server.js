@@ -13,7 +13,6 @@ import bookingRoutes from "./routes/bookingRoutes.js";
 import razorpayRoutes from "./routes/razorpayRoutes.js";
 import { errorHandler } from "./middlewares/errorMiddlewares.js";
 import generateFlightData from "./utils/generateRandomData.js";
-// generateFlightData();
 // Assigning PORT
 const port = process.env.PORT || 7000;
 
@@ -41,7 +40,6 @@ app.use("/api/razorpay", razorpayRoutes);
 
 /* API_Html_Pages */
 if (process.env.NODE_ENV === "production") {
-  generateFlightData();
   app.get("/", (req, res) => {
     res.status(200);
     res.sendFile(path.join(__dirname, "public", "html", "index.html"));
@@ -62,7 +60,19 @@ if (process.env.NODE_ENV === "production") {
 /* Error-Handlers || Custom Middlewares */
 app.use(errorHandler);
 
-/* Server Listening */
-app.listen(port, () => {
-  console.log(`Server Running On Port ${port}`);
-});
+// Call generateFlightData when the server starts
+async function startServer() {
+  try {
+    // Call the function with the desired count
+    await generateFlightData();
+    /* Server Listening */
+    app.listen(port, () => {
+      console.log(`Server Running On Port ${port}`);
+    });
+  } catch (error) {
+    console.error("Error starting server:", error.message);
+  }
+}
+
+// Call startServer to initiate the server startup
+startServer();
