@@ -12,7 +12,8 @@ import flightRoutes from "./routes/flightRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
 import razorpayRoutes from "./routes/razorpayRoutes.js";
 import { errorHandler } from "./middlewares/errorMiddlewares.js";
-
+import generateFlightData from "./utils/generateRandomData.js";
+generateFlightData();
 // Assigning PORT
 const port = process.env.PORT || 7000;
 
