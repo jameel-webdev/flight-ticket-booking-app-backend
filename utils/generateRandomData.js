@@ -42,7 +42,7 @@ const getRandomFlightClass = () => {
   return flightType[index];
 };
 
-async function generateFlightData(count = 100) {
+async function generateFlightData(count = 30) {
   try {
     await Flight.collection.drop();
     for (let i = 0; i < count; i++) {
