@@ -57,7 +57,7 @@ async function generateFlightData(count = 100) {
         destination,
         journeyDate: format(
           faker.date.soon({
-            days: 2,
+            days: 5,
           }),
           "yyyy-MM-dd"
         ),
