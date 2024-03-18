@@ -64,7 +64,7 @@ app.use(errorHandler);
 async function startServer() {
   try {
     // Call the function with the desired count
-    await generateFlightData();
+    // await generateFlightData();
     /* Server Listening */
     app.listen(port, () => {
       console.log(`Server Running On Port ${port}`);
